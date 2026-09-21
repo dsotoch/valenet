@@ -23,7 +23,11 @@ class Plan extends Model
         'precio' => 'decimal:2',
         'estado' => 'boolean',
     ];
-     public function clientes()
+    public function clientes()
+    {
+        return $this->hasMany(ClientePlan::class);
+    }
+    public function clientePlanes()
     {
         return $this->hasMany(ClientePlan::class);
     }

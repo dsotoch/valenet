@@ -4,24 +4,35 @@
 
 <head>
 
-   
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>@yield('title', 'Dashboard') - Valenet</title>
-    
+
     {{-- FONT AWESOME --}}
     <link
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css">
-     <style>
-        button{
-            cursor: pointer;
-        }
-        a{
-            cursor: pointer;
-        }
-     </style>
+    <style>
+    button {
+        cursor: pointer;
+    }
+
+    a {
+        cursor: pointer;
+    }
+
+    /* Scroll del sidebar sin mostrar la barra */
+    .sidebar-scroll {
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+
+    .sidebar-scroll::-webkit-scrollbar {
+        display: none;
+    }
+</style>
     {{-- TAILWIND --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -62,15 +73,15 @@
     </script>
 
     @stack('styles')
-   
+
 
 </head>
 
-<body class="bg-slate-100 text-slate-800">
+<body class="bg-slate-100 text-slate-400">
 
     <div class="min-h-screen">
 
-       
+
         {{-- ============================================================
     OVERLAY MÓVIL
 ============================================================= --}}
@@ -145,7 +156,7 @@
         MENU
     ========================================================= --}}
 
-            <nav class="flex-1 overflow-y-auto px-4 py-6">
+            <nav class="sidebar-scroll flex-1 overflow-y-auto px-4 py-6">
 
 
                 {{-- PRINCIPAL --}}
@@ -155,7 +166,7 @@
                 mb-3 px-3
                 text-xs font-semibold
                 uppercase tracking-wider
-                text-slate-500
+                text-slate-400
             ">
                     Principal
                 </p>
@@ -201,8 +212,8 @@
                 {{-- PLANES --}}
 
                 <a
-                     href="{{ route('planes.index') }}"
-                     class="{{ request()->routeIs('planes.*')
+                    href="{{ route('planes.index') }}"
+                    class="{{ request()->routeIs('planes.*')
         ? 'bg-cyan-500 text-white shadow-sm'
         : 'text-slate-300 hover:bg-white/10 hover:text-white' }}
                 mb-1 flex items-center gap-3
@@ -226,8 +237,8 @@
                 {{-- PAGOS --}}
 
                 <a
-                     href="{{ route('pagos.index') }}"
-                     class="{{ request()->routeIs('pagos.*')
+                    href="{{ route('pagos.index') }}"
+                    class="{{ request()->routeIs('pagos.*')
         ? 'bg-cyan-500 text-white shadow-sm'
         : 'text-slate-300 hover:bg-white/10 hover:text-white' }}
                 mb-1 flex items-center gap-3
@@ -255,7 +266,7 @@
                 mb-3 mt-8 px-3
                 text-xs font-semibold
                 uppercase tracking-wider
-                text-slate-500
+                text-slate-400
             ">
                     Administración
                 </p>
@@ -264,9 +275,10 @@
                 {{-- USUARIOS --}}
 
                 <a
-                    href="#"
-                    class="
-                mb-1 flex items-center gap-3
+                    href="{{ route('usuarios.index') }}"
+                    class="{{ request()->routeIs('usuarios.*')
+        ? 'bg-cyan-500 text-white shadow-sm'
+        : 'text-slate-300 hover:bg-white/10 hover:text-white' }} mb-1 flex items-center gap-3
                 rounded-xl px-4 py-3
                 text-sm font-medium
                 text-slate-300
@@ -287,8 +299,10 @@
                 {{-- REPORTES --}}
 
                 <a
-                    href="#"
-                    class="
+                    href=" {{ route('reportes.index') }}"
+                    class="{{ request()->routeIs('reportes.*')
+        ? 'bg-cyan-500 text-white shadow-sm'
+        : 'text-slate-300 hover:bg-white/10 hover:text-white' }}
                 mb-1 flex items-center gap-3
                 rounded-xl px-4 py-3
                 text-sm font-medium
@@ -305,9 +319,45 @@
                     </span>
 
                 </a>
+                {{-- RESTABLECER BASE DE DATOS --}}
+
+                @if(auth()->user()?->rol === 'administrador')
+
+                <form
+                    method="POST"
+                    action="{{ route('admin.reset-db') }}"
+                    onsubmit="return confirmarRestablecerBD(this)"
+                    class="mb-1">
+                    @csrf
+
+                    <button
+                        type="submit"
+                        class="
+                w-full
+                flex items-center gap-3
+                rounded-xl px-4 py-3
+                text-sm font-medium
+                text-red-400
+                transition
+                hover:bg-red-500/10
+                hover:text-red-300
+            ">
+                        <i class="fa-solid fa-database w-5 text-center"></i>
+
+                        <span>
+                            Restablecer BD
+                        </span>
+                    </button>
+                </form>
+
+                @endif
 
             </nav>
 
+            {{-- ADMINISTRACIÓN --}}
+            <p class="mb-3 mt-8 px-3 text-xs font-semibold uppercase tracking-wider text-slate-400">
+                Administración
+            </p>
 
             {{-- ========================================================
         USUARIO SIDEBAR
@@ -341,7 +391,7 @@
                         </p>
 
                         <p class="truncate text-xs text-slate-400">
-                            Administrador
+                            {{ ucwords(auth()->user()?->rol ?? 'Administrador') }}
                         </p>
 
                     </div>
@@ -435,7 +485,7 @@
                         <h2
                             class="
             text-lg font-bold
-            text-slate-800
+            text-slate-700
             sm:text-xl
         ">
                             @yield('header-title', 'Dashboard')
@@ -461,12 +511,12 @@
 
                     <div class="hidden text-right sm:block">
 
-                        <p class="text-sm font-semibold text-slate-800">
+                        <p class="text-sm font-semibold text-slate-700">
                             {{ auth()->user()->name ?? 'Usuario' }}
                         </p>
 
-                        <p class="text-xs text-slate-500">
-                            Administrador
+                        <p class="text-xs text-slate-700">
+                            {{ ucwords(auth()->user()?->rol ?? 'Administrador') }}
                         </p>
 
                     </div>
@@ -502,9 +552,39 @@
             </main>
 
         </div>
-       
+
 
     </div>
+    <script>
+         function confirmarRestablecerBD(formulario) {
+
+        const confirmacion = prompt(
+            "⚠️ ADVERTENCIA\n\n" +
+            "Esta acción eliminará TODOS los datos de la base de datos.\n\n" +
+            "Se ejecutará:\n" +
+            "• migrate:fresh\n" +
+            "• seeders\n\n" +
+            "Esta acción NO se puede deshacer.\n\n" +
+            "Para continuar, escribe exactamente:\nRESTABLECER"
+        );
+
+        if (confirmacion === null) {
+            return false;
+        }
+
+        if (confirmacion.trim() !== 'RESTABLECER') {
+
+            alert(
+                "❌ Operación cancelada.\n\n" +
+                "Debes escribir exactamente RESTABLECER."
+            );
+
+            return false;
+        }
+
+        return true;
+    }
+    </script>
 
     @stack('scripts')
 

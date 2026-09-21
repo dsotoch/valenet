@@ -22,6 +22,7 @@ class Pago extends Model
         'referencia',
         'observacion',
         'estado',
+        'modificado'
     ];
 
     protected $casts = [
@@ -31,7 +32,10 @@ class Pago extends Model
         'monto' => 'decimal:2',
         'monto_pagado' => 'decimal:2',
     ];
-
+    public function usuario(): BelongsTo
+    {
+        return $this->belongsTo(User::class,'modificado');
+    }
     public function cliente(): BelongsTo
     {
         return $this->belongsTo(Cliente::class);

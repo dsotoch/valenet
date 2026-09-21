@@ -35,4 +35,10 @@ class Cliente extends Model
     {
         return $this->hasMany(Pago::class);
     }
+
+
+    public function clientePlanes()
+    {
+        return $this->hasMany(ClientePlan::class);
+    }
 }

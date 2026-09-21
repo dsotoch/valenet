@@ -657,7 +657,7 @@
                             name="nombre"
                             required
                             maxlength="100"
-                            class="w-full rounded-xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-sm outline-none transition focus:border-cyan-400 focus:bg-white focus:ring-2 focus:ring-cyan-100"
+                            class="w-full text-slate-600 rounded-xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-sm outline-none transition focus:border-cyan-400 focus:bg-white focus:ring-2 focus:ring-cyan-100"
                             placeholder="Ej. Plan Hogar 300 Mbps">
 
                     </div>
@@ -687,7 +687,7 @@
                             name="velocidad"
                             required
                             maxlength="50"
-                            class="w-full rounded-xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-sm outline-none transition focus:border-cyan-400 focus:bg-white focus:ring-2 focus:ring-cyan-100"
+                            class="w-full text-slate-600 rounded-xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-sm outline-none transition focus:border-cyan-400 focus:bg-white focus:ring-2 focus:ring-cyan-100"
                             placeholder="Ej. 300 Mbps">
 
                     </div>
@@ -718,7 +718,7 @@
                             required
                             min="0"
                             step="0.01"
-                            class="w-full rounded-xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-sm outline-none transition focus:border-cyan-400 focus:bg-white focus:ring-2 focus:ring-cyan-100"
+                            class="w-full text-slate-600 rounded-xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-sm outline-none transition focus:border-cyan-400 focus:bg-white focus:ring-2 focus:ring-cyan-100"
                             placeholder="Ej. 79.90">
 
                     </div>
@@ -743,7 +743,7 @@
                         <select
                             id="estado"
                             name="estado"
-                            class="w-full appearance-none rounded-xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-sm outline-none transition focus:border-cyan-400 focus:bg-white focus:ring-2 focus:ring-cyan-100">
+                            class="w-full text-slate-600 appearance-none rounded-xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-sm outline-none transition focus:border-cyan-400 focus:bg-white focus:ring-2 focus:ring-cyan-100">
 
                             <option value="1">
                                 Activo
@@ -779,7 +779,7 @@
                             name="descripcion"
                             rows="4"
                             maxlength="500"
-                            class="w-full resize-none rounded-xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-sm outline-none transition focus:border-cyan-400 focus:bg-white focus:ring-2 focus:ring-cyan-100"
+                            class="w-full text-slate-600 resize-none rounded-xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-sm outline-none transition focus:border-cyan-400 focus:bg-white focus:ring-2 focus:ring-cyan-100"
                             placeholder="Describe las características del plan"></textarea>
 
                     </div>

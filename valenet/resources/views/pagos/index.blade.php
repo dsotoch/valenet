@@ -8,422 +8,258 @@
 
 <div class="space-y-6">
 
-{{-- ========================================================= --}}
-{{-- ENCABEZADO --}}
-{{-- ========================================================= --}}
+    {{-- ========================================================= --}}
+    {{-- ENCABEZADO --}}
+    {{-- ========================================================= --}}
 
-<div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 
-    <div>
+        <div>
 
-        <h1 class="text-2xl font-bold text-slate-800">
-            Pagos
-        </h1>
+            <h1 class="text-2xl font-bold text-slate-800">
+                Pagos
+            </h1>
 
-        <p class="mt-1 text-sm text-slate-800">
-            Gestiona los pagos, planes y cobranza de tus clientes.
-        </p>
+            <p class="mt-1 text-sm text-slate-800">
+                Gestiona los pagos, planes y cobranza de tus clientes.
+            </p>
+
+        </div>
+
+
+        <button
+            type="button"
+            onclick="abrirModalAsignarPlan()"
+            class="inline-flex items-center justify-center gap-2 rounded-xl bg-cyan-500 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-cyan-600">
+
+            <i class="fa-solid fa-user-plus"></i>
+
+            Asignar plan
+
+        </button>
 
     </div>
 
 
-    <button
-        type="button"
-        onclick="abrirModalAsignarPlan()"
-        class="inline-flex items-center justify-center gap-2 rounded-xl bg-cyan-500 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-cyan-600">
+    {{-- ========================================================= --}}
+    {{-- MENSAJE --}}
+    {{-- ========================================================= --}}
 
-        <i class="fa-solid fa-user-plus"></i>
+    @if(session('success'))
 
-        Asignar plan
+    <div
+        id="mensaje-exito"
+        class="flex items-center gap-3 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
 
-    </button>
-
-</div>
-
-
-{{-- ========================================================= --}}
-{{-- MENSAJE --}}
-{{-- ========================================================= --}}
-
-@if(session('success'))
-
-<div
-    id="mensaje-exito"
-    class="flex items-center gap-3 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
-
-    <i class="fa-solid fa-circle-check text-lg"></i>
-
-    <span>
-        {{ session('success') }}
-    </span>
-
-    <button
-        type="button"
-        onclick="document.getElementById('mensaje-exito').remove()"
-        class="ml-auto text-emerald-600 hover:text-emerald-800">
-
-        <i class="fa-solid fa-xmark"></i>
-
-    </button>
-
-</div>
-
-@endif
-
-
-{{-- ========================================================= --}}
-{{-- ERRORES --}}
-{{-- ========================================================= --}}
-
-@if($errors->any())
-
-<div class="rounded-xl border border-red-200 bg-red-50 p-4">
-
-    <div class="flex items-center gap-2 font-semibold text-red-700">
-
-        <i class="fa-solid fa-circle-exclamation"></i>
+        <i class="fa-solid fa-circle-check text-lg"></i>
 
         <span>
-            Revisa los siguientes errores:
+            {{ session('success') }}
         </span>
 
+        <button
+            type="button"
+            onclick="document.getElementById('mensaje-exito').remove()"
+            class="ml-auto text-emerald-600 hover:text-emerald-800">
+
+            <i class="fa-solid fa-xmark"></i>
+
+        </button>
+
     </div>
 
-
-    <ul class="mt-2 list-disc space-y-1 pl-6 text-sm text-red-600">
-
-        @foreach($errors->all() as $error)
-
-        <li>
-            {{ $error }}
-        </li>
-
-        @endforeach
-
-    </ul>
-
-</div>
-
-@endif
+    @endif
 
 
-{{-- ========================================================= --}}
-{{-- ESTADÍSTICAS --}}
-{{-- ========================================================= --}}
+    {{-- ========================================================= --}}
+    {{-- ERRORES --}}
+    {{-- ========================================================= --}}
+    @if(session('error'))
+    <div class="rounded-xl border border-red-200 bg-red-50 p-4">
 
-<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <div class="flex items-center gap-2 font-semibold text-red-700">
+            <i class="fa-solid fa-circle-exclamation"></i>
 
-
-    {{-- Pendientes --}}
-
-    <div class="rounded-2xl border border-amber-200 bg-amber-50 p-5">
-
-        <div class="flex items-center justify-between">
-
-            <div>
-
-                <p class="text-sm font-medium text-amber-700">
-                    Pendientes
-                </p>
-
-                <p class="mt-1 text-2xl font-bold text-amber-800">
-                    S/ {{ number_format($pendientesMonto, 2) }}
-                </p>
-
-                <p class="mt-1 text-xs text-amber-700">
-                    {{ $pendientesCantidad }}
-                    {{ $pendientesCantidad === 1 ? 'pago' : 'pagos' }}
-                </p>
-
-            </div>
-
-
-            <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-white text-amber-500 shadow-sm">
-
-                <i class="fa-solid fa-clock text-lg"></i>
-
-            </div>
-
+            <span>
+                {{ session('error') }}
+            </span>
         </div>
 
     </div>
+    @endif
+    @if($errors->any())
 
+    <div class="rounded-xl border border-red-200 bg-red-50 p-4">
 
-    {{-- Vencidos --}}
+        <div class="flex items-center gap-2 font-semibold text-red-700">
 
-    <div class="rounded-2xl border border-red-200 bg-red-50 p-5">
+            <i class="fa-solid fa-circle-exclamation"></i>
 
-        <div class="flex items-center justify-between">
-
-            <div>
-
-                <p class="text-sm font-medium text-red-700">
-                    Vencidos
-                </p>
-
-                <p class="mt-1 text-2xl font-bold text-red-800">
-                    S/ {{ number_format($vencidosMonto, 2) }}
-                </p>
-
-                <p class="mt-1 text-xs text-red-700">
-                    {{ $vencidosCantidad }}
-                    {{ $vencidosCantidad === 1 ? 'pago' : 'pagos' }}
-                </p>
-
-            </div>
-
-
-            <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-white text-red-500 shadow-sm">
-
-                <i class="fa-solid fa-triangle-exclamation text-lg"></i>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-    {{-- Cobrado --}}
-
-    <div class="rounded-2xl border border-emerald-200 bg-emerald-50 p-5">
-
-        <div class="flex items-center justify-between">
-
-            <div>
-
-                <p class="text-sm font-medium text-emerald-700">
-                    Cobrado este mes
-                </p>
-
-                <p class="mt-1 text-2xl font-bold text-emerald-800">
-                    S/ {{ number_format($pagadosMonto, 2) }}
-                </p>
-
-                <p class="mt-1 text-xs text-emerald-700">
-                    {{ $pagadosCantidad }}
-                    {{ $pagadosCantidad === 1 ? 'pago' : 'pagos' }}
-                </p>
-
-            </div>
-
-
-            <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-white text-emerald-500 shadow-sm">
-
-                <i class="fa-solid fa-circle-check text-lg"></i>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-    {{-- Vence hoy --}}
-
-    <div class="rounded-2xl border border-cyan-200 bg-cyan-50 p-5">
-
-        <div class="flex items-center justify-between">
-
-            <div>
-
-                <p class="text-sm font-medium text-cyan-700">
-                    Vence hoy
-                </p>
-
-                <p class="mt-1 text-2xl font-bold text-cyan-800">
-                    S/ {{ number_format($venceHoyMonto, 2) }}
-                </p>
-
-                <p class="mt-1 text-xs text-cyan-700">
-                    {{ $venceHoyCantidad }}
-                    {{ $venceHoyCantidad === 1 ? 'cliente' : 'clientes' }}
-                </p>
-
-            </div>
-
-
-            <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-white text-cyan-500 shadow-sm">
-
-                <i class="fa-solid fa-calendar-day text-lg"></i>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-{{-- ========================================================= --}}
-{{-- FILTROS --}}
-{{-- ========================================================= --}}
-
-<div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-
-    <form
-        method="GET"
-        action="{{ route('pagos.index') }}"
-        class="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-5">
-
-
-        {{-- Buscar --}}
-
-        <div class="relative xl:col-span-2">
-
-            <i
-                class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-800">
-            </i>
-
-            <input
-                type="text"
-                name="buscar"
-                value="{{ $buscar }}"
-                placeholder="Buscar cliente o plan..."
-                class="w-full rounded-xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-sm text-slate-700 outline-none transition placeholder:text-slate-800 focus:border-cyan-400 focus:bg-white focus:ring-2 focus:ring-cyan-100">
+            <span>
+                Revisa los siguientes errores:
+            </span>
 
         </div>
 
 
-        {{-- Estado --}}
+        <ul class="mt-2 list-disc space-y-1 pl-6 text-sm text-red-600">
 
-        <select
-            name="estado"
-            class="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 outline-none focus:border-cyan-400 focus:bg-white focus:ring-2 focus:ring-cyan-100">
+            @foreach($errors->all() as $error)
 
-            <option value="">
-                Todos los estados
-            </option>
-
-            <option
-                value="pendiente"
-                @selected($estado === 'pendiente')>
-                Pendientes
-            </option>
-
-            <option
-                value="vencido"
-                @selected($estado === 'vencido')>
-                Vencidos
-            </option>
-
-            <option
-                value="pagado"
-                @selected($estado === 'pagado')>
-                Pagados
-            </option>
-
-            <option
-                value="anulado"
-                @selected($estado === 'anulado')>
-                Anulados
-            </option>
-
-        </select>
-
-
-        {{-- Plan --}}
-
-        <select
-            name="plan_id"
-            class="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 outline-none focus:border-cyan-400 focus:bg-white focus:ring-2 focus:ring-cyan-100">
-
-            <option value="">
-                Todos los planes
-            </option>
-
-            @foreach($planes as $plan)
-
-            <option
-                value="{{ $plan->id }}"
-                @selected((string) $planId === (string) $plan->id)>
-
-                {{ $plan->nombre }}
-
-            </option>
+            <li>
+                {{ $error }}
+            </li>
 
             @endforeach
 
-        </select>
+        </ul>
+
+    </div>
+
+    @endif
 
 
-        {{-- Periodo --}}
+    {{-- ========================================================= --}}
+    {{-- ESTADÍSTICAS --}}
+    {{-- ========================================================= --}}
 
-        <input
-            type="month"
-            name="periodo"
-            value="{{ $periodo }}"
-            class="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 outline-none focus:border-cyan-400 focus:bg-white focus:ring-2 focus:ring-cyan-100">
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
 
 
-        <div class="flex gap-2 md:col-span-2 xl:col-span-5">
+        {{-- Pendientes --}}
 
-            <button
-                type="submit"
-                class="inline-flex items-center justify-center gap-2 rounded-xl bg-slate-800 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-900">
+        <div class="rounded-2xl border border-amber-200 bg-amber-50 p-5">
 
-                <i class="fa-solid fa-filter"></i>
+            <div class="flex items-center justify-between">
 
-                Buscar
+                <div>
 
-            </button>
+                    <p class="text-sm font-medium text-amber-700">
+                        Pendientes
+                    </p>
 
+                    <p class="mt-1 text-2xl font-bold text-amber-800">
+                        S/ {{ number_format($pendientesMonto, 2) }}
+                    </p>
 
-            @if($buscar || $estado || $planId || $periodo)
+                    <p class="mt-1 text-xs text-amber-700">
+                        {{ $pendientesCantidad }}
+                        {{ $pendientesCantidad === 1 ? 'pago' : 'pagos' }}
+                    </p>
 
-            <a
-                href="{{ route('pagos.index') }}"
-                class="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-600 transition hover:bg-slate-50">
-
-                <i class="fa-solid fa-rotate-left"></i>
-
-                Limpiar
-
-            </a>
-
-            @endif
-
-        </div>
-
-    </form>
-
-</div>
+                </div>
 
 
-{{-- ========================================================= --}}
-{{-- TABLA --}}
-{{-- ========================================================= --}}
+                <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-white text-amber-500 shadow-sm">
 
-<div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+                    <i class="fa-solid fa-clock text-lg"></i>
 
-
-    {{-- Cabecera --}}
-
-    <div class="border-b border-slate-100 px-5 py-4">
-
-        <div class="flex items-center justify-between">
-
-            <div>
-
-                <h2 class="font-semibold text-slate-800">
-                    Lista de pagos
-                </h2>
-
-                <p class="mt-1 text-xs text-slate-800">
-
-                    {{ $pagos->total() }}
-
-                    {{ $pagos->total() === 1 ? 'pago registrado' : 'pagos registrados' }}
-
-                </p>
+                </div>
 
             </div>
 
+        </div>
 
-            <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-cyan-50 text-cyan-500">
 
-                <i class="fa-solid fa-money-bill-wave"></i>
+        {{-- Vencidos --}}
+
+        <div class="rounded-2xl border border-red-200 bg-red-50 p-5">
+
+            <div class="flex items-center justify-between">
+
+                <div>
+
+                    <p class="text-sm font-medium text-red-700">
+                        Vencidos
+                    </p>
+
+                    <p class="mt-1 text-2xl font-bold text-red-800">
+                        S/ {{ number_format($vencidosMonto, 2) }}
+                    </p>
+
+                    <p class="mt-1 text-xs text-red-700">
+                        {{ $vencidosCantidad }}
+                        {{ $vencidosCantidad === 1 ? 'pago' : 'pagos' }}
+                    </p>
+
+                </div>
+
+
+                <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-white text-red-500 shadow-sm">
+
+                    <i class="fa-solid fa-triangle-exclamation text-lg"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        {{-- Cobrado --}}
+
+        <div class="rounded-2xl border border-emerald-200 bg-emerald-50 p-5">
+
+            <div class="flex items-center justify-between">
+
+                <div>
+
+                    <p class="text-sm font-medium text-emerald-700">
+                        Cobrado este mes
+                    </p>
+
+                    <p class="mt-1 text-2xl font-bold text-emerald-800">
+                        S/ {{ number_format($pagadosMonto, 2) }}
+                    </p>
+
+                    <p class="mt-1 text-xs text-emerald-700">
+                        {{ $pagadosCantidad }}
+                        {{ $pagadosCantidad === 1 ? 'pago' : 'pagos' }}
+                    </p>
+
+                </div>
+
+
+                <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-white text-emerald-500 shadow-sm">
+
+                    <i class="fa-solid fa-circle-check text-lg"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        {{-- Vence hoy --}}
+
+        <div class="rounded-2xl border border-cyan-200 bg-cyan-50 p-5">
+
+            <div class="flex items-center justify-between">
+
+                <div>
+
+                    <p class="text-sm font-medium text-cyan-700">
+                        Vence hoy
+                    </p>
+
+                    <p class="mt-1 text-2xl font-bold text-cyan-800">
+                        S/ {{ number_format($venceHoyMonto, 2) }}
+                    </p>
+
+                    <p class="mt-1 text-xs text-cyan-700">
+                        {{ $venceHoyCantidad }}
+                        {{ $venceHoyCantidad === 1 ? 'cliente' : 'clientes' }}
+                    </p>
+
+                </div>
+
+
+                <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-white text-cyan-500 shadow-sm">
+
+                    <i class="fa-solid fa-calendar-day text-lg"></i>
+
+                </div>
 
             </div>
 
@@ -432,154 +268,368 @@
     </div>
 
 
-    {{-- ===================================================== --}}
-    {{-- DESKTOP --}}
-    {{-- ===================================================== --}}
+    {{-- ========================================================= --}}
+    {{-- FILTROS --}}
+    {{-- ========================================================= --}}
 
-    <div class="hidden overflow-x-auto md:block">
+    <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
 
-        <table class="w-full text-left">
-
-            <thead class="bg-slate-50">
-
-                <tr class="border-b border-slate-100">
-
-                    <th class="px-5 py-4 text-xs font-semibold uppercase tracking-wide text-slate-800">
-                        Cliente
-                    </th>
-
-                    <th class="px-5 py-4 text-xs font-semibold uppercase tracking-wide text-slate-800">
-                        Plan
-                    </th>
-
-                    <th class="px-5 py-4 text-xs font-semibold uppercase tracking-wide text-slate-800">
-                        Vencimiento
-                    </th>
-
-                    <th class="px-5 py-4 text-xs font-semibold uppercase tracking-wide text-slate-800">
-                        Monto
-                    </th>
-
-                    <th class="px-5 py-4 text-xs font-semibold uppercase tracking-wide text-slate-800">
-                        Estado
-                    </th>
-
-                    <th class="px-5 py-4 text-right text-xs font-semibold uppercase tracking-wide text-slate-800">
-                        Acciones
-                    </th>
-
-                </tr>
-
-            </thead>
+        <form
+            method="GET"
+            action="{{ route('pagos.index') }}"
+            class="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-5">
 
 
-            <tbody class="divide-y divide-slate-100">
+            {{-- Buscar --}}
 
-                @forelse($pagos as $pago)
+            <div class="relative xl:col-span-2">
 
-                <tr class="transition hover:bg-slate-50">
+                <i
+                    class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-800">
+                </i>
 
+                <input
+                    type="text"
+                    name="buscar"
+                    value="{{ $buscar }}"
+                    placeholder="Buscar cliente o plan..."
+                    class="w-full rounded-xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-sm text-slate-700 outline-none transition placeholder:text-slate-800 focus:border-cyan-400 focus:bg-white focus:ring-2 focus:ring-cyan-100">
 
-                    {{-- Cliente --}}
-
-                    <td class="px-5 py-4">
-
-                        <div class="flex items-center gap-3">
-
-                            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-cyan-100 text-cyan-600">
-
-                                <i class="fa-solid fa-user"></i>
-
-                            </div>
+            </div>
 
 
-                            <div>
+            {{-- Estado --}}
 
-                                <p class="font-semibold text-slate-800">
+            <select
+                name="estado"
+                class="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 outline-none focus:border-cyan-400 focus:bg-white focus:ring-2 focus:ring-cyan-100">
 
-                                    {{ $pago->cliente->nombre ?? 'Sin cliente' }}
+                <option value="">
+                    Todos los estados
+                </option>
 
-                                </p>
+                <option
+                    value="pendiente"
+                    @selected($estado==='pendiente' )>
+                    Pendientes
+                </option>
 
-                                <p class="text-xs text-slate-800">
+                <option
+                    value="vencido"
+                    @selected($estado==='vencido' )>
+                    Vencidos
+                </option>
 
-                                    {{ $pago->cliente->telefono ?? 'Sin teléfono' }}
+                <option
+                    value="pagado"
+                    @selected($estado==='pagado' )>
+                    Pagados
+                </option>
 
-                                </p>
+                <option
+                    value="anulado"
+                    @selected($estado==='anulado' )>
+                    Anulados
+                </option>
 
-                            </div>
-
-                        </div>
-
-                    </td>
+            </select>
 
 
-                    {{-- Plan --}}
+            {{-- Plan --}}
 
-                    <td class="px-5 py-4">
+            <select
+                name="plan_id"
+                class="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 outline-none focus:border-cyan-400 focus:bg-white focus:ring-2 focus:ring-cyan-100">
 
-                        @if($pago->clientePlan?->plan)
+                <option value="">
+                    Todos los planes
+                </option>
 
-                        <p class="font-semibold text-slate-700">
+                @foreach($planes as $plan)
 
-                            {{ $pago->clientePlan->plan->nombre }}
+                <option
+                    value="{{ $plan->id }}"
+                    @selected((string) $planId===(string) $plan->id)>
 
-                        </p>
+                    {{ $plan->nombre }}
 
-                        <p class="text-xs text-slate-800">
+                </option>
 
-                            {{ $pago->clientePlan->plan->velocidad }}
+                @endforeach
 
-                        </p>
+            </select>
 
-                        @else
 
-                        <span class="text-sm text-slate-800">
-                            Sin plan
-                        </span>
+            {{-- Periodo --}}
 
+            <input
+                type="month"
+                name="periodo"
+                value="{{ $periodo }}"
+                class="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 outline-none focus:border-cyan-400 focus:bg-white focus:ring-2 focus:ring-cyan-100">
+
+
+            <div class="flex gap-2 md:col-span-2 xl:col-span-5">
+
+                <button
+                    type="submit"
+                    class="inline-flex items-center justify-center gap-2 rounded-xl bg-slate-800 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-900">
+
+                    <i class="fa-solid fa-filter"></i>
+
+                    Buscar
+
+                </button>
+
+
+                @if($buscar || $estado || $planId || $periodo)
+
+                <a
+                    href="{{ route('pagos.index') }}"
+                    class="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-600 transition hover:bg-slate-50">
+
+                    <i class="fa-solid fa-rotate-left"></i>
+
+                    Limpiar
+
+                </a>
+
+                @endif
+
+            </div>
+
+        </form>
+
+    </div>
+
+
+    {{-- ========================================================= --}}
+    {{-- TABLA --}}
+    {{-- ========================================================= --}}
+
+    <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+
+
+        {{-- Cabecera --}}
+
+        <div class="border-b border-slate-100 px-5 py-4">
+
+            <div class="flex items-center justify-between">
+
+                <div>
+
+                    <h2 class="font-semibold text-slate-800">
+                        Lista de pagos
+                    </h2>
+
+                    <p class="mt-1 text-xs text-slate-800">
+
+                        {{ $pagos->total() }}
+
+                        {{ $pagos->total() === 1 ? 'pago registrado' : 'pagos registrados' }}
+
+                    </p>
+
+                </div>
+
+
+                <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-cyan-50 text-cyan-500">
+
+                    <i class="fa-solid fa-money-bill-wave"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        {{-- ===================================================== --}}
+        {{-- DESKTOP --}}
+        {{-- ===================================================== --}}
+
+        <div class="hidden overflow-x-auto md:block">
+
+            <table class="w-full text-left">
+
+                <thead class="bg-slate-50">
+
+                    <tr class="border-b border-slate-100">
+
+                        <th class="px-5 py-4 text-xs font-semibold uppercase tracking-wide text-slate-800">
+                            Cliente
+                        </th>
+                        @if(Auth::user()->rol=="administrador")
+
+                        <th class="px-5 py-4 text-xs font-semibold uppercase tracking-wide text-slate-800">
+                            Usuario
+                        </th>
                         @endif
+                        <th class="px-5 py-4 text-xs font-semibold uppercase tracking-wide text-slate-800">
+                            Plan
+                        </th>
 
-                    </td>
+                        <th class="px-5 py-4 text-xs font-semibold uppercase tracking-wide text-slate-800">
+                            Vencimiento
+                        </th>
+
+                        <th class="px-5 py-4 text-xs font-semibold uppercase tracking-wide text-slate-800">
+                            Monto
+                        </th>
+
+                        <th class="px-5 py-4 text-xs font-semibold uppercase tracking-wide text-slate-800">
+                            Estado
+                        </th>
+
+                        <th class="px-5 py-4 text-right text-xs font-semibold uppercase tracking-wide text-slate-800">
+                            Acciones
+                        </th>
+
+                    </tr>
+
+                </thead>
 
 
-                    {{-- Vencimiento --}}
+                <tbody class="divide-y divide-slate-100">
 
-                    <td class="px-5 py-4">
+                    @forelse($pagos as $pago)
 
-                        <p class="text-sm font-semibold text-slate-700">
-
-                            {{ $pago->fecha_vencimiento?->format('d/m/Y') }}
-
-                        </p>
-
-                        <p class="text-xs text-slate-800">
-
-                            {{ $pago->periodo?->format('F Y') }}
-
-                        </p>
-
-                    </td>
+                    <tr class="transition hover:bg-slate-50">
 
 
-                    {{-- Monto --}}
+                        {{-- Cliente --}}
 
-                    <td class="px-5 py-4">
+                        <td class="px-5 py-4">
 
-                        <p class="text-base font-bold text-slate-800">
+                            <div class="flex items-center gap-3">
 
-                            S/
-                            {{ number_format($pago->monto, 2) }}
+                                <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-cyan-100 text-slate-600">
 
-                        </p>
+                                    <i class="fa-solid fa-user"></i>
 
-                        @if($pago->estado !== 'pagado')
+                                </div>
 
-                        <p class="text-xs text-red-500">
 
-                            Pendiente:
-                            S/
-                            {{ number_format(
+                                <div>
+
+                                    <p class="font-semibold text-slate-800">
+
+                                        @php
+                                        $nombre=$pago->cliente->nombres??'';
+                                        $primer_nombre = explode(' ', trim($nombre))[0];
+
+                                        $apellidos=$pago->cliente->apellidos??'';
+                                        $primer_apellido = explode(' ', trim($apellidos))[0];
+
+                                        $nombres=$primer_nombre ." ". $primer_apellido;
+                                        @endphp
+
+                                        {{ ucwords(strtolower($nombres) )?? 'Sin cliente' }}
+
+                                    </p>
+
+                                    <p class="text-xs text-slate-800">
+
+                                        {{ $pago->cliente->telefono ?? 'Sin teléfono' }}
+
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        </td>
+
+                        @if(Auth::user()->rol=="administrador")
+
+                        <td class="px-5 py-4">
+
+                            @if($pago->usuario?->name)
+
+                            <p class="font-semibold text-slate-700">
+
+                                {{ucwords(strtolower($pago->usuario->name))}}
+
+                            </p>
+
+
+
+                            @else
+
+                            <span class="text-sm text-slate-800">
+                                Generado por Sistema
+                            </span>
+
+                            @endif
+
+                        </td>
+                        @endif
+                        {{-- Plan --}}
+
+                        <td class="px-5 py-4">
+
+                            @if($pago->clientePlan?->plan)
+
+                            <p class="font-semibold text-slate-700">
+
+                                {{ $pago->clientePlan->plan->nombre }}
+
+                            </p>
+
+                            <p class="text-xs text-slate-800">
+
+                                {{ $pago->clientePlan->plan->velocidad }}
+
+                            </p>
+
+                            @else
+
+                            <span class="text-sm text-slate-800">
+                                Sin plan
+                            </span>
+
+                            @endif
+
+                        </td>
+
+
+                        {{-- Vencimiento --}}
+
+                        <td class="px-5 py-4">
+
+                            <p class="text-sm font-semibold text-slate-700">
+
+                                {{ $pago->fecha_vencimiento?->format('d/m/Y') }}
+
+                            </p>
+
+                            <p class="text-xs text-slate-800">
+
+                                {{ $pago->periodo?->locale('es')->translatedFormat('F Y') }}
+
+                            </p>
+
+                        </td>
+
+
+                        {{-- Monto --}}
+
+                        <td class="px-5 py-4">
+
+                            <p class="text-base font-bold text-slate-800">
+
+                                S/
+                                {{ number_format($pago->monto, 2) }}
+
+                            </p>
+
+                            @if($pago->estado !== 'pagado')
+
+                            <p class="text-xs text-red-500">
+
+                                Pendiente:
+                                S/
+                                {{ number_format(
                                 max(
                                     0,
                                     $pago->monto - $pago->monto_pagado
@@ -587,326 +637,350 @@
                                 2
                             ) }}
 
-                        </p>
+                            </p>
 
-                        @endif
+                            @endif
 
-                    </td>
-
-
-                    {{-- Estado --}}
-
-                    <td class="px-5 py-4">
-
-                        @if($pago->estado === 'pagado')
-
-                        <span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-600">
-
-                            <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
-
-                            Pagado
-
-                        </span>
+                        </td>
 
 
-                        @elseif($pago->estado === 'vencido')
+                        {{-- Estado --}}
 
-                        <span class="inline-flex items-center gap-1.5 rounded-full bg-red-50 px-3 py-1 text-xs font-semibold text-red-600">
+                        <td class="px-5 py-4">
 
-                            <span class="h-1.5 w-1.5 rounded-full bg-red-500"></span>
+                            @if($pago->estado === 'pagado')
 
-                            Vencido
+                            <span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-600">
 
-                        </span>
+                                <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
 
+                                Pagado
 
-                        @elseif($pago->estado === 'anulado')
-
-                        <span class="inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
-
-                            <span class="h-1.5 w-1.5 rounded-full bg-slate-500"></span>
-
-                            Anulado
-
-                        </span>
+                            </span>
 
 
-                        @else
+                            @elseif($pago->estado === 'vencido')
 
-                        <span class="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-600">
+                            <span class="inline-flex items-center gap-1.5 rounded-full bg-red-50 px-3 py-1 text-xs font-semibold text-red-600">
 
-                            <span class="h-1.5 w-1.5 rounded-full bg-amber-500"></span>
+                                <span class="h-1.5 w-1.5 rounded-full bg-red-500"></span>
 
-                            Pendiente
+                                Vencido
 
-                        </span>
-
-                        @endif
-
-                    </td>
+                            </span>
 
 
-                    {{-- Acciones --}}
+                            @elseif($pago->estado === 'anulado')
 
-                    <td class="px-5 py-4">
+                            <span class="inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
 
-                        <div class="flex justify-end gap-1">
+                                <span class="h-1.5 w-1.5 rounded-full bg-slate-500"></span>
+
+                                Anulado
+
+                            </span>
 
 
-                            {{-- Registrar pago --}}
+                            @else
 
-                            @if(
+                            <span class="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-600">
+
+                                <span class="h-1.5 w-1.5 rounded-full bg-amber-500"></span>
+
+                                Pendiente
+
+                            </span>
+
+                            @endif
+
+                        </td>
+
+
+                        {{-- Acciones --}}
+
+                        <td class="px-5 py-4">
+
+                            <div class="flex justify-end gap-1">
+
+
+                                {{-- Registrar pago --}}
+
+                                @if(
                                 $pago->estado === 'pendiente' ||
                                 $pago->estado === 'vencido'
-                            )
+                                )
 
-                            <button
-                                type="button"
-                                onclick='abrirModalPago(@js($pago))'
-                                title="Registrar pago"
-                                class="flex h-9 w-9 items-center justify-center rounded-lg text-emerald-600 transition hover:bg-emerald-50">
+                                <button
+                                    type="button"
+                                    onclick="abrirModalPago(@js($pago))"
+                                    title="Registrar pago"
+                                    class="flex h-9 w-9 items-center justify-center rounded-lg text-emerald-600 transition hover:bg-emerald-50">
 
-                                <i class="fa-solid fa-money-bill-wave"></i>
+                                    <i class="fa-solid fa-money-bill-wave"></i>
 
-                            </button>
+                                </button>
 
-                            @endif
+                                @endif
 
 
-                            {{-- WhatsApp --}}
+                                {{-- WhatsApp --}}
 
-                            @if(
+                                @if(
                                 $pago->estado === 'pendiente' ||
                                 $pago->estado === 'vencido'
-                            )
+                                )
 
-                            <a
-                                href="{{ route('pagos.whatsapp', $pago) }}"
-                                title="Enviar recordatorio por WhatsApp"
-                                class="flex h-9 w-9 items-center justify-center rounded-lg text-green-600 transition hover:bg-green-50">
+                                <a
+                                    href="{{ route('pagos.whatsapp', $pago) }}"
+                                    title="Enviar recordatorio por WhatsApp"
+                                    class="flex h-9 w-9 items-center justify-center rounded-lg text-green-600 transition hover:bg-green-50">
 
-                                <i class="fa-brands fa-whatsapp"></i>
+                                    <i class="fa-brands fa-whatsapp"></i>
 
-                            </a>
+                                </a>
 
-                            @endif
-
-
-                            {{-- Editar --}}
-
-                            <button
-                                type="button"
-                                onclick='abrirModalEditarPago(@js($pago))'
-                                title="Editar"
-                                class="flex h-9 w-9 items-center justify-center rounded-lg text-slate-600 transition hover:bg-slate-100">
-
-                                <i class="fa-solid fa-pen"></i>
-
-                            </button>
+                                @endif
 
 
-                            {{-- Anular --}}
+                                {{-- Editar --}}
 
-                            @if($pago->estado !== 'anulado')
+                                <button
+                                    type="button"
+                                    onclick="abrirModalEditarPago(@js($pago))"
+                                    title="Editar"
+                                    class="flex h-9 w-9 items-center justify-center rounded-lg text-slate-600 transition hover:bg-slate-100">
 
-                            <button
-                                type="button"
-                                onclick="anularPago('{{ $pago->id }}')"
-                                title="Anular"
-                                class="flex h-9 w-9 items-center justify-center rounded-lg text-red-500 transition hover:bg-red-50">
+                                    <i class="fa-solid fa-pen"></i>
 
-                                <i class="fa-solid fa-ban"></i>
+                                </button>
 
-                            </button>
+                                {{-- Imprimir recibo --}}
+                                @if($pago->estado === 'pagado')
+                                <a
+                                    href="{{ route('pagos.recibo', $pago) }}"
+                                    target="_blank"
+                                    title="Imprimir recibo"
+                                    class="flex h-9 w-9 items-center justify-center rounded-lg text-slate-600 transition hover:bg-cyan-50">
 
-                            @endif
+                                    <i class="fa-solid fa-print"></i>
 
-                        </div>
+                                </a>
+                                @endif
 
-                    </td>
+                                {{-- Anular --}}
 
-                </tr>
+                                @if($pago->estado !== 'anulado')
 
+                                <button
+                                    type="button"
+                                    onclick="anularPago('{{ $pago->id }}')"
+                                    title="Anular"
+                                    class="flex h-9 w-9 items-center justify-center rounded-lg text-red-500 transition hover:bg-red-50">
 
-                @empty
+                                    <i class="fa-solid fa-ban"></i>
 
-                <tr>
+                                </button>
 
-                    <td colspan="6" class="px-5 py-16 text-center">
+                                @endif
 
-                        <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-slate-100 text-slate-800">
+                            </div>
 
-                            <i class="fa-solid fa-money-bill-wave text-2xl"></i>
+                        </td>
 
-                        </div>
-
-                        <h3 class="mt-4 font-semibold text-slate-700">
-                            No hay pagos
-                        </h3>
-
-                        <p class="mt-1 text-sm text-slate-800">
-                            Todavía no existen pagos registrados.
-                        </p>
-
-                    </td>
-
-                </tr>
-
-                @endforelse
-
-            </tbody>
-
-        </table>
-
-    </div>
+                    </tr>
 
 
-    {{-- ===================================================== --}}
-    {{-- MOBILE --}}
-    {{-- ===================================================== --}}
+                    @empty
 
-    <div class="divide-y divide-slate-100 md:hidden">
+                    <tr>
 
-        @forelse($pagos as $pago)
+                        <td colspan="6" class="px-5 py-16 text-center">
 
-        <div class="p-4">
+                            <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-slate-100 text-slate-800">
 
-            <div class="flex items-start gap-3">
+                                <i class="fa-solid fa-money-bill-wave text-2xl"></i>
 
+                            </div>
 
-                <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-cyan-100 text-cyan-600">
-
-                    <i class="fa-solid fa-user"></i>
-
-                </div>
-
-
-                <div class="min-w-0 flex-1">
-
-
-                    <div class="flex items-start justify-between gap-2">
-
-                        <div>
-
-                            <h3 class="font-semibold text-slate-800">
-
-                                {{ $pago->cliente->nombre ?? 'Sin cliente' }}
-
+                            <h3 class="mt-4 font-semibold text-slate-700">
+                                No hay pagos
                             </h3>
 
-                            <p class="mt-0.5 text-xs text-slate-800">
+                            <p class="mt-1 text-sm text-slate-800">
+                                Todavía no existen pagos registrados.
+                            </p>
 
-                                {{ $pago->clientePlan?->plan?->nombre ?? 'Sin plan' }}
+                        </td>
+
+                    </tr>
+
+                    @endforelse
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        {{-- ===================================================== --}}
+        {{-- MOBILE --}}
+        {{-- ===================================================== --}}
+
+        <div class="divide-y divide-slate-100 md:hidden">
+
+            @forelse($pagos as $pago)
+
+            <div class="p-4">
+
+                <div class="flex items-start gap-3">
+
+
+                    <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-cyan-100 text-slate-600">
+
+                        <i class="fa-solid fa-user"></i>
+
+                    </div>
+
+
+                    <div class="min-w-0 flex-1">
+
+
+                        <div class="flex items-start justify-between gap-2">
+
+                            <div>
+
+                                <h3 class="font-semibold text-slate-800">
+
+                                    {{ $pago->cliente->nombre ?? 'Sin cliente' }}
+
+                                </h3>
+
+                                <p class="mt-0.5 text-xs text-slate-800">
+
+                                    {{ $pago->clientePlan?->plan?->nombre ?? 'Sin plan' }}
+
+                                </p>
+
+                            </div>
+
+
+                            @if($pago->estado === 'pagado')
+
+                            <span class="shrink-0 rounded-full bg-emerald-50 px-2.5 py-1 text-[11px] font-semibold text-emerald-600">
+                                Pagado
+                            </span>
+
+                            @elseif($pago->estado === 'vencido')
+
+                            <span class="shrink-0 rounded-full bg-red-50 px-2.5 py-1 text-[11px] font-semibold text-red-600">
+                                Vencido
+                            </span>
+
+                            @elseif($pago->estado === 'anulado')
+
+                            <span class="shrink-0 rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-semibold text-slate-600">
+                                Anulado
+                            </span>
+
+                            @else
+
+                            <span class="shrink-0 rounded-full bg-amber-50 px-2.5 py-1 text-[11px] font-semibold text-amber-600">
+                                Pendiente
+                            </span>
+
+                            @endif
+
+                        </div>
+
+
+                        <div class="mt-3 space-y-2">
+
+                            <p class="text-sm font-bold text-slate-800">
+
+                                <i class="fa-solid fa-money-bill-wave mr-2 w-4 text-slate-800"></i>
+
+                                S/
+                                {{ number_format($pago->monto, 2) }}
+
+                            </p>
+
+
+                            <p class="text-sm text-slate-800">
+
+                                <i class="fa-solid fa-calendar mr-2 w-4"></i>
+
+                                Vence:
+
+                                {{ $pago->fecha_vencimiento?->format('d/m/Y') }}
+
+                            </p>
+
+
+                            <p class="text-sm text-slate-800">
+
+                                <i class="fa-solid fa-gauge-high mr-2 w-4"></i>
+
+                                {{ $pago->clientePlan?->plan?->velocidad ?? 'Sin plan' }}
 
                             </p>
 
                         </div>
 
 
-                        @if($pago->estado === 'pagado')
-
-                        <span class="shrink-0 rounded-full bg-emerald-50 px-2.5 py-1 text-[11px] font-semibold text-emerald-600">
-                            Pagado
-                        </span>
-
-                        @elseif($pago->estado === 'vencido')
-
-                        <span class="shrink-0 rounded-full bg-red-50 px-2.5 py-1 text-[11px] font-semibold text-red-600">
-                            Vencido
-                        </span>
-
-                        @elseif($pago->estado === 'anulado')
-
-                        <span class="shrink-0 rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-semibold text-slate-600">
-                            Anulado
-                        </span>
-
-                        @else
-
-                        <span class="shrink-0 rounded-full bg-amber-50 px-2.5 py-1 text-[11px] font-semibold text-amber-600">
-                            Pendiente
-                        </span>
-
-                        @endif
-
-                    </div>
+                        <div class="mt-4 flex gap-2 border-t border-slate-100 pt-3">
 
 
-                    <div class="mt-3 space-y-2">
-
-                        <p class="text-sm font-bold text-slate-800">
-
-                            <i class="fa-solid fa-money-bill-wave mr-2 w-4 text-slate-800"></i>
-
-                            S/
-                            {{ number_format($pago->monto, 2) }}
-
-                        </p>
-
-
-                        <p class="text-sm text-slate-800">
-
-                            <i class="fa-solid fa-calendar mr-2 w-4"></i>
-
-                            Vence:
-
-                            {{ $pago->fecha_vencimiento?->format('d/m/Y') }}
-
-                        </p>
-
-
-                        <p class="text-sm text-slate-800">
-
-                            <i class="fa-solid fa-gauge-high mr-2 w-4"></i>
-
-                            {{ $pago->clientePlan?->plan?->velocidad ?? 'Sin plan' }}
-
-                        </p>
-
-                    </div>
-
-
-                    <div class="mt-4 flex gap-2 border-t border-slate-100 pt-3">
-
-
-                        @if(
+                            @if(
                             $pago->estado === 'pendiente' ||
                             $pago->estado === 'vencido'
-                        )
+                            )
 
-                        <button
-                            type="button"
-                            onclick='abrirModalPago(@js($pago))'
-                            class="flex flex-1 items-center justify-center gap-2 rounded-lg border border-emerald-100 py-2 text-xs font-semibold text-emerald-600 hover:bg-emerald-50">
+                            <button
+                                type="button"
+                                onclick='abrirModalPago(@js($pago))'
+                                class="flex flex-1 items-center justify-center gap-2 rounded-lg border border-emerald-100 py-2 text-xs font-semibold text-emerald-600 hover:bg-emerald-50">
 
-                            <i class="fa-solid fa-money-bill-wave"></i>
+                                <i class="fa-solid fa-money-bill-wave"></i>
 
-                            Pagar
+                                Pagar
 
-                        </button>
-
-
-                        <a
-                            href="{{ route('pagos.whatsapp', $pago) }}"
-                            class="flex flex-1 items-center justify-center gap-2 rounded-lg border border-green-100 py-2 text-xs font-semibold text-green-600 hover:bg-green-50">
-
-                            <i class="fa-brands fa-whatsapp"></i>
-
-                            WhatsApp
-
-                        </a>
-
-                        @endif
+                            </button>
 
 
-                        <button
-                            type="button"
-                            onclick='abrirModalEditarPago(@js($pago))'
-                            class="flex items-center justify-center rounded-lg border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-50">
+                            <a
+                                href="{{ route('pagos.whatsapp', $pago) }}"
+                                class="flex flex-1 items-center justify-center gap-2 rounded-lg border border-green-100 py-2 text-xs font-semibold text-green-600 hover:bg-green-50">
 
-                            <i class="fa-solid fa-pen"></i>
+                                <i class="fa-brands fa-whatsapp"></i>
 
-                        </button>
+                                WhatsApp
+
+                            </a>
+
+                            @endif
+
+                            @if($pago->estado === 'pagado')
+                            <a
+                                href="{{ route('pagos.recibo', $pago) }}"
+                                target="_blank"
+                                class="flex items-center justify-center rounded-lg border border-cyan-100 px-3 py-2 text-xs font-semibold text-slate-600 hover:bg-cyan-50"
+                                title="Imprimir recibo">
+
+                                <i class="fa-solid fa-print"></i>
+
+                            </a>
+                            @endif
+                            <button
+                                type="button"
+                                onclick="abrirModalEditarPago(@js($pago))"
+                                class="flex items-center justify-center rounded-lg border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-50">
+
+                                <i class="fa-solid fa-pen"></i>
+
+                            </button>
+
+                        </div>
 
                     </div>
 
@@ -914,40 +988,38 @@
 
             </div>
 
+            @empty
+
+            <div class="px-5 py-16 text-center">
+
+                <i class="fa-solid fa-money-bill-wave text-3xl text-slate-300"></i>
+
+                <p class="mt-3 font-semibold text-slate-600">
+                    No hay pagos registrados
+                </p>
+
+            </div>
+
+            @endforelse
+
         </div>
 
-        @empty
 
-        <div class="px-5 py-16 text-center">
+        {{-- ========================================================= --}}
+        {{-- PAGINACIÓN --}}
+        {{-- ========================================================= --}}
 
-            <i class="fa-solid fa-money-bill-wave text-3xl text-slate-300"></i>
+        @if($pagos->hasPages())
 
-            <p class="mt-3 font-semibold text-slate-600">
-                No hay pagos registrados
-            </p>
+        <div class="border-t border-slate-100 px-5 py-4">
+
+            {{ $pagos->links() }}
 
         </div>
 
-        @endforelse
+        @endif
 
     </div>
-
-
-    {{-- ========================================================= --}}
-    {{-- PAGINACIÓN --}}
-    {{-- ========================================================= --}}
-
-    @if($pagos->hasPages())
-
-    <div class="border-t border-slate-100 px-5 py-4">
-
-        {{ $pagos->links() }}
-
-    </div>
-
-    @endif
-
-</div>
 
 </div>
 
@@ -1022,7 +1094,7 @@
                         name="cliente_id"
                         id="asignar_cliente_id"
                         required
-                        class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-cyan-400 focus:bg-white focus:ring-2 focus:ring-cyan-100">
+                        class="w-full rounded-xl text-slate-600 border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-cyan-400 focus:bg-white focus:ring-2 focus:ring-cyan-100">
 
                         <option value="">
                             Selecciona un cliente
@@ -1036,7 +1108,7 @@
                             {{ $cliente->nombres }}
 
                             @if($cliente->telefono)
-                                — {{ $cliente->telefono }}
+                            — {{ $cliente->telefono }}
                             @endif
 
                         </option>
@@ -1065,7 +1137,7 @@
                         id="asignar_plan_id"
                         required
                         onchange="mostrarPrecioPlan()"
-                        class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-cyan-400 focus:bg-white focus:ring-2 focus:ring-cyan-100">
+                        class="w-full rounded-xl text-slate-600  border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-cyan-400 focus:bg-white focus:ring-2 focus:ring-cyan-100">
 
                         <option value="">
                             Selecciona un plan
@@ -1102,7 +1174,7 @@
 
                     <div
                         id="precio-plan-mostrado"
-                        class="rounded-xl border border-cyan-100 bg-cyan-50 px-4 py-3 text-lg font-bold text-cyan-700">
+                        class="rounded-xl text-slate-600 border border-cyan-100 bg-cyan-50 px-4 py-3 text-lg font-bold text-cyan-700">
 
                         S/ 0.00
 
@@ -1131,7 +1203,7 @@
                             name="fecha_inicio"
                             value="{{ now()->format('Y-m-d') }}"
                             required
-                            class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-cyan-400 focus:bg-white focus:ring-2 focus:ring-cyan-100">
+                            class="w-full  text-slate-600 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-cyan-400 focus:bg-white focus:ring-2 focus:ring-cyan-100">
 
                     </div>
 
@@ -1151,9 +1223,9 @@
                         <input
                             type="date"
                             name="fecha_vencimiento"
-                            value="{{ now()->format('Y-m-d') }}"
+                            value="{{ now()->addDays(30)->format('Y-m-d') }}"
                             required
-                            class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-cyan-400 focus:bg-white focus:ring-2 focus:ring-cyan-100">
+                            class="w-full text-slate-600  rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-cyan-400 focus:bg-white focus:ring-2 focus:ring-cyan-100">
 
                     </div>
 
@@ -1222,7 +1294,7 @@
 
                     <p
                         id="pago-cliente-texto"
-                        class="mt-0.5 text-sm text-slate-800">
+                        class="mt-0.5 text-sm  font-semibold text-slate-800">
                     </p>
 
                 </div>
@@ -1254,7 +1326,7 @@
 
                         <div>
 
-                            <p class="text-xs text-slate-500">
+                            <p class="text-xs text-slate-700">
                                 Plan
                             </p>
 
@@ -1268,13 +1340,13 @@
 
                         <div>
 
-                            <p class="text-xs text-slate-500">
+                            <p class="text-xs text-slate-700">
                                 Monto
                             </p>
 
                             <p
                                 id="pago-monto"
-                                class="mt-1 text-lg font-bold text-cyan-600">
+                                class="mt-1  text-lg font-bold text-slate-600">
                             </p>
 
                         </div>
@@ -1303,7 +1375,7 @@
                         step="0.01"
                         min="0"
                         required
-                        class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-cyan-400 focus:bg-white focus:ring-2 focus:ring-cyan-100">
+                        class="w-full text-slate-600 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-cyan-400 focus:bg-white focus:ring-2 focus:ring-cyan-100">
 
                 </div>
 
@@ -1325,7 +1397,7 @@
                         name="fecha_pago"
                         value="{{ now()->format('Y-m-d') }}"
                         required
-                        class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-cyan-400 focus:bg-white focus:ring-2 focus:ring-cyan-100">
+                        class="w-full text-slate-600 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-cyan-400 focus:bg-white focus:ring-2 focus:ring-cyan-100">
 
                 </div>
 
@@ -1345,7 +1417,7 @@
                     <select
                         name="metodo_pago"
                         required
-                        class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-cyan-400 focus:bg-white focus:ring-2 focus:ring-cyan-100">
+                        class="w-full text-slate-600 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-cyan-400 focus:bg-white focus:ring-2 focus:ring-cyan-100">
 
                         <option value="">
                             Selecciona
@@ -1393,7 +1465,7 @@
                         name="referencia"
                         maxlength="100"
                         placeholder="Ej. número de operación"
-                        class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-cyan-400 focus:bg-white focus:ring-2 focus:ring-cyan-100">
+                        class="w-full text-slate-600 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-cyan-400 focus:bg-white focus:ring-2 focus:ring-cyan-100">
 
                 </div>
 
@@ -1410,7 +1482,7 @@
                         name="observacion"
                         rows="3"
                         maxlength="1000"
-                        class="w-full resize-none rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-cyan-400 focus:bg-white focus:ring-2 focus:ring-cyan-100"></textarea>
+                        class="w-full text-slate-600 resize-none rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-cyan-400 focus:bg-white focus:ring-2 focus:ring-cyan-100"></textarea>
 
                 </div>
 
@@ -1536,7 +1608,7 @@
                                 id="editar-vencimiento"
                                 name="fecha_vencimiento"
                                 required
-                                class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-cyan-400 focus:bg-white focus:ring-2 focus:ring-cyan-100">
+                                class="w-full rounded-xl text-slate-500 border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-cyan-400 focus:bg-white focus:ring-2 focus:ring-cyan-100">
 
                         </div>
 
@@ -1554,7 +1626,7 @@
                                 step="0.01"
                                 min="0"
                                 required
-                                class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-cyan-400 focus:bg-white focus:ring-2 focus:ring-cyan-100">
+                                class="text-slate-500 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-cyan-400 focus:bg-white focus:ring-2 focus:ring-cyan-100">
 
                         </div>
 
@@ -1571,7 +1643,7 @@
                             id="editar-estado"
                             name="estado"
                             required
-                            class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-cyan-400 focus:bg-white focus:ring-2 focus:ring-cyan-100">
+                            class="w-full text-slate-500 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-cyan-400 focus:bg-white focus:ring-2 focus:ring-cyan-100">
 
                             <option value="pendiente">
                                 Pendiente
@@ -1605,7 +1677,7 @@
                             name="observacion"
                             rows="4"
                             maxlength="1000"
-                            class="w-full resize-none rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-cyan-400 focus:bg-white focus:ring-2 focus:ring-cyan-100"></textarea>
+                            class="w-full  text-slate-500 resize-none rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-cyan-400 focus:bg-white focus:ring-2 focus:ring-cyan-100"></textarea>
 
                     </div>
 
@@ -1668,7 +1740,6 @@
 @push('scripts')
 
 <script>
-
     function cerrarModal(id) {
 
         const modal =
@@ -1718,8 +1789,8 @@
             option?.dataset?.precio ?? '0';
 
         document.getElementById(
-            'precio-plan-mostrado'
-        ).textContent =
+                'precio-plan-mostrado'
+            ).textContent =
             `S/ ${parseFloat(precio).toFixed(2)}`;
 
     }
@@ -1743,7 +1814,7 @@
 
 
         const cliente =
-            pago.cliente?.nombre ??
+            pago.cliente?.nombres ??
             'Cliente';
 
 
@@ -1753,20 +1824,20 @@
 
 
         document.getElementById(
-            'pago-cliente-texto'
-        ).textContent =
+                'pago-cliente-texto'
+            ).textContent =
             cliente;
 
 
         document.getElementById(
-            'pago-plan'
-        ).textContent =
+                'pago-plan'
+            ).textContent =
             plan;
 
 
         document.getElementById(
-            'pago-monto'
-        ).textContent =
+                'pago-monto'
+            ).textContent =
             `S/ ${parseFloat(pago.monto).toFixed(2)}`;
 
 
@@ -1779,8 +1850,8 @@
 
 
         document.getElementById(
-            'monto_pagado'
-        ).value =
+                'monto_pagado'
+            ).value =
             pendiente.toFixed(2);
 
 
@@ -1812,36 +1883,34 @@
 
 
         document.getElementById(
-            'editar-cliente'
-        ).value =
-            pago.cliente?.nombre ??
+                'editar-cliente'
+            ).value =
+            pago.cliente?.nombres ??
             'Sin cliente';
 
-
-        document.getElementById(
-            'editar-vencimiento'
-        ).value =
-            pago.fecha_vencimiento ??
+        document.getElementById('editar-vencimiento').value =
+            pago.fecha_vencimiento ?
+            pago.fecha_vencimiento.substring(0, 10) :
             '';
 
 
         document.getElementById(
-            'editar-monto'
-        ).value =
+                'editar-monto'
+            ).value =
             pago.monto ??
             '';
 
 
         document.getElementById(
-            'editar-estado'
-        ).value =
+                'editar-estado'
+            ).value =
             pago.estado ??
             'pendiente';
 
 
         document.getElementById(
-            'editar-observacion'
-        ).value =
+                'editar-observacion'
+            ).value =
             pago.observacion ??
             '';
 
@@ -1904,7 +1973,6 @@
 
         }
     );
-
 </script>
 
 @endpush

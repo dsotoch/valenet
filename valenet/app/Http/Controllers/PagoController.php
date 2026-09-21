@@ -9,15 +9,27 @@ use App\Models\Plan;
 use App\Models\RecordatorioPago;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class PagoController extends Controller
 {
+    public function recibo(Pago $pago)
+    {
+        $pago->load([
+            'cliente',
+            'clientePlan.plan',
+        ]);
+
+        return view('pagos.recibo', compact('pago'));
+    }
+
     /**
      * Lista principal de pagos.
      */
     public function index(Request $request)
     {
+        $usuario = Auth::user();
         $buscar = trim($request->get('buscar', ''));
 
         $estado = $request->get('estado', '');
@@ -27,9 +39,11 @@ class PagoController extends Controller
         $periodo = $request->get('periodo', '');
 
         $pagos = Pago::with([
+            'usuario',
             'cliente',
             'clientePlan.plan',
         ])
+
             ->when($buscar, function ($query) use ($buscar) {
 
                 $query->where(function ($q) use ($buscar) {
@@ -38,21 +52,18 @@ class PagoController extends Controller
 
                         $cliente->where('nombres', 'like', "%{$buscar}%")
                             ->orWhere('telefono', 'like', "%{$buscar}%");
-
                     })
 
-                    ->orWhereHas('clientePlan.plan', function ($plan) use ($buscar) {
+                        ->orWhereHas('clientePlan.plan', function ($plan) use ($buscar) {
 
-                        $plan->where('nombre', 'like', "%{$buscar}%");
-
-                    });
+                            $plan->where('nombre', 'like', "%{$buscar}%");
+                        });
                 });
             })
 
             ->when($estado, function ($query) use ($estado) {
 
                 $query->where('estado', $estado);
-
             })
 
             ->when($planId, function ($query) use ($planId) {
@@ -60,30 +71,26 @@ class PagoController extends Controller
                 $query->whereHas('clientePlan', function ($q) use ($planId) {
 
                     $q->where('plan_id', $planId);
-
                 });
-
             })
 
             ->when($periodo, function ($query) use ($periodo) {
 
                 $query->whereYear('periodo', substr($periodo, 0, 4))
                     ->whereMonth('periodo', substr($periodo, 5, 2));
-
             })
 
             ->orderByRaw("
-                CASE
-                    WHEN estado = 'vencido' THEN 1
-                    WHEN estado = 'pendiente' THEN 2
-                    WHEN estado = 'pagado' THEN 3
-                    ELSE 4
-                END
-            ")
+        CASE
+            WHEN estado = 'vencido' THEN 1
+            WHEN estado = 'pendiente' THEN 2
+            WHEN estado = 'pagado' THEN 3
+            ELSE 4
+        END
+    ")
 
-            ->orderBy('fecha_vencimiento')
-
-            ->paginate(15)
+            ->orderBy('fecha_vencimiento', 'desc')
+            ->paginate(1000)
 
             ->withQueryString();
 
@@ -93,6 +100,7 @@ class PagoController extends Controller
          */
         Pago::where('estado', 'pendiente')
             ->whereDate('fecha_vencimiento', '<', now()->toDateString())
+
             ->update([
                 'estado' => 'vencido',
             ]);
@@ -107,18 +115,17 @@ class PagoController extends Controller
         $vencidosMonto = Pago::where('estado', 'vencido')
             ->sum(DB::raw('monto - monto_pagado'));
 
-        $pagadosMonto = Pago::where('estado', 'pagado')
+        $pagadosMonto = Pago::whereIn('estado', ['pagado', 'pendiente'])
             ->whereMonth('fecha_pago', now()->month)
             ->whereYear('fecha_pago', now()->year)
             ->sum('monto_pagado');
 
         $venceHoyMonto = Pago::whereIn('estado', [
-                'pendiente',
-                'vencido',
-            ])
+            'pendiente',
+            'vencido',
+        ])
             ->whereDate('fecha_vencimiento', now()->toDateString())
             ->sum(DB::raw('monto - monto_pagado'));
-
 
         $pendientesCantidad = Pago::where('estado', 'pendiente')
             ->count();
@@ -126,15 +133,15 @@ class PagoController extends Controller
         $vencidosCantidad = Pago::where('estado', 'vencido')
             ->count();
 
-        $pagadosCantidad = Pago::where('estado', 'pagado')
+        $pagadosCantidad = Pago::whereIn('estado', ['pagado', 'pendiente'])
             ->whereMonth('fecha_pago', now()->month)
             ->whereYear('fecha_pago', now()->year)
             ->count();
 
         $venceHoyCantidad = Pago::whereIn('estado', [
-                'pendiente',
-                'vencido',
-            ])
+            'pendiente',
+            'vencido',
+        ])
             ->whereDate('fecha_vencimiento', now()->toDateString())
             ->count();
 
@@ -194,24 +201,41 @@ class PagoController extends Controller
             ],
         ], [
             'cliente_id.required' =>
-                'Debes seleccionar un cliente.',
+            'Debes seleccionar un cliente.',
 
             'cliente_id.exists' =>
-                'El cliente seleccionado no existe.',
+            'El cliente seleccionado no existe.',
 
             'plan_id.required' =>
-                'Debes seleccionar un plan.',
+            'Debes seleccionar un plan.',
 
             'plan_id.exists' =>
-                'El plan seleccionado no existe.',
+            'El plan seleccionado no existe.',
 
             'fecha_inicio.required' =>
-                'La fecha de inicio es obligatoria.',
+            'La fecha de inicio es obligatoria.',
 
             'fecha_vencimiento.required' =>
-                'La fecha de vencimiento es obligatoria.',
+            'La fecha de vencimiento es obligatoria.',
         ]);
+        $planActivo = ClientePlan::where(
+            'cliente_id',
+            $datos['cliente_id']
+        )
+            ->where('estado', true)
+            ->first();
 
+
+        if ($planActivo) {
+
+            return redirect()
+                ->back()
+                ->with(
+                    'error',
+                    'El cliente ya tiene un plan activo. No se puede asignar otro.'
+                )
+                ->withInput();
+        }
 
         DB::transaction(function () use ($datos) {
 
@@ -257,13 +281,14 @@ class PagoController extends Controller
                 )->startOfMonth(),
 
                 'fecha_vencimiento' =>
-                    $datos['fecha_vencimiento'],
+                $datos['fecha_vencimiento'],
 
                 'monto' => $plan->precio,
 
                 'monto_pagado' => 0,
 
                 'estado' => 'pendiente',
+                'modificado' => auth()->user()->id ?? 0
             ]);
         });
 
@@ -313,36 +338,41 @@ class PagoController extends Controller
             ],
         ], [
             'monto_pagado.required' =>
-                'El monto pagado es obligatorio.',
+            'El monto pagado es obligatorio.',
 
             'monto_pagado.numeric' =>
-                'El monto pagado debe ser numérico.',
+            'El monto pagado debe ser numérico.',
 
             'monto_pagado.min' =>
-                'El monto no puede ser negativo.',
+            'El monto no puede ser negativo.',
 
             'fecha_pago.required' =>
-                'La fecha de pago es obligatoria.',
+            'La fecha de pago es obligatoria.',
 
             'metodo_pago.required' =>
-                'Selecciona un método de pago.',
+            'Selecciona un método de pago.',
         ]);
 
+        $monto_pagado_actual = $pago->monto_pagado;
 
-        if ((float) $datos['monto_pagado'] >
-            (float) $pago->monto) {
+        $total_abonado = (float)$monto_pagado_actual + (float) $datos['monto_pagado'];
+        if (
+            $total_abonado >
+            (float) $pago->monto
+        ) {
 
             return back()
                 ->withErrors([
                     'monto_pagado' =>
-                        'El monto pagado no puede superar el monto del pago.',
+                    'El monto pagado no puede superar el monto del pago.',
                 ])
                 ->withInput();
         }
 
 
+
         $pago->monto_pagado =
-            $datos['monto_pagado'];
+            $total_abonado;
 
         $pago->fecha_pago =
             $datos['fecha_pago'];
@@ -357,19 +387,21 @@ class PagoController extends Controller
             $datos['observacion'] ?? null;
 
 
+
+
+
         if (
-            (float) $datos['monto_pagado']
+            $total_abonado
             >=
             (float) $pago->monto
         ) {
 
             $pago->estado = 'pagado';
-
         } else {
 
             $pago->estado = 'pendiente';
         }
-
+        $pago->modificado = auth()->user()->id ?? 0;
 
         $pago->save();
 
@@ -422,9 +454,14 @@ class PagoController extends Controller
         $pago->observacion =
             $datos['observacion'] ?? null;
 
+        if ($pago->estado === 'pagado') {
+            return redirect()
+                ->back()
+                ->with('error', 'El pago ya no se puede modificar.');
+        }
         $pago->estado =
             $datos['estado'];
-
+        $pago->modificado = auth()->user()->id ?? 0;
         $pago->save();
 
 
@@ -442,10 +479,33 @@ class PagoController extends Controller
      */
     public function destroy(Pago $pago)
     {
-        $pago->estado = 'anulado';
+        $clientePlan = $pago->clientePlan;
 
+        // Anular pago
+        $pago->estado = 'anulado';
+        $pago->modificado = auth()->user()->id ?? 0;
         $pago->save();
 
+        // Verificar si quedan otros pagos activos
+        if ($clientePlan) {
+
+            $tienePagosActivos = Pago::where(
+                'cliente_plan_id',
+                $clientePlan->id
+            )
+                ->where('id', '!=', $pago->id)
+                ->whereIn('estado', [
+                    'pendiente',
+                    'vencido',
+                    'pagado',
+                ])
+                ->exists();
+
+            if (!$tienePagosActivos) {
+                $clientePlan->estado = false;
+                $clientePlan->save();
+            }
+        }
 
         return redirect()
             ->route('pagos.index')
@@ -483,7 +543,7 @@ class PagoController extends Controller
             return back()
                 ->withErrors([
                     'whatsapp' =>
-                        'El cliente no tiene un número de teléfono válido.',
+                    'El cliente no tiene un número de teléfono válido.',
                 ]);
         }
 
@@ -504,7 +564,7 @@ class PagoController extends Controller
             max(
                 0,
                 (float) $pago->monto -
-                (float) $pago->monto_pagado
+                    (float) $pago->monto_pagado
             );
 
 
@@ -523,7 +583,7 @@ class PagoController extends Controller
                 "\n" .
                 "📅 Vencimiento: " .
                 $pago->fecha_vencimiento
-                    ->format('d/m/Y') .
+                ->format('d/m/Y') .
                 "\n\n" .
                 "Por favor realiza tu pago para mantener " .
                 "activo tu servicio.\n\n" .
@@ -543,7 +603,7 @@ class PagoController extends Controller
                 "\n" .
                 "📅 Fecha de vencimiento: " .
                 $pago->fecha_vencimiento
-                    ->format('d/m/Y') .
+                ->format('d/m/Y') .
                 "\n\n" .
                 "Gracias por confiar en Valenet.";
         }

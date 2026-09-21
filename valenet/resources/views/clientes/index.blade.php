@@ -663,7 +663,7 @@
                                 name="nombres"
                                 required
                                 maxlength="100"
-                                class="w-full rounded-xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-sm outline-none transition focus:border-cyan-400 focus:bg-white focus:ring-2 focus:ring-cyan-100"
+                                class="w-full text-slate-600 rounded-xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-sm outline-none transition focus:border-cyan-400 focus:bg-white focus:ring-2 focus:ring-cyan-100"
                                 placeholder="Ej. Juan Carlos">
 
                         </div>
@@ -690,7 +690,7 @@
                                 name="apellidos"
                                 required
                                 maxlength="100"
-                                class="w-full rounded-xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-sm outline-none transition focus:border-cyan-400 focus:bg-white focus:ring-2 focus:ring-cyan-100"
+                                class="w-full text-slate-600 rounded-xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-sm outline-none transition focus:border-cyan-400 focus:bg-white focus:ring-2 focus:ring-cyan-100"
                                 placeholder="Ej. Pérez García">
 
                         </div>
@@ -717,7 +717,7 @@
                                 name="documento"
                                 required
                                 maxlength="20"
-                                class="w-full rounded-xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-sm outline-none transition focus:border-cyan-400 focus:bg-white focus:ring-2 focus:ring-cyan-100"
+                                class="w-full text-slate-600 rounded-xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-sm outline-none transition focus:border-cyan-400 focus:bg-white focus:ring-2 focus:ring-cyan-100"
                                 placeholder="DNI / CE / RUC">
 
                         </div>
@@ -742,7 +742,7 @@
                                 id="telefono"
                                 name="telefono"
                                 maxlength="20"
-                                class="w-full rounded-xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-sm outline-none transition focus:border-cyan-400 focus:bg-white focus:ring-2 focus:ring-cyan-100"
+                                class="w-full text-slate-600 rounded-xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-sm outline-none transition focus:border-cyan-400 focus:bg-white focus:ring-2 focus:ring-cyan-100"
                                 placeholder="Ej. 987654321">
 
                         </div>
@@ -767,7 +767,7 @@
                                 id="email"
                                 name="email"
                                 maxlength="150"
-                                class="w-full rounded-xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-sm outline-none transition focus:border-cyan-400 focus:bg-white focus:ring-2 focus:ring-cyan-100"
+                                class="w-full text-slate-600 rounded-xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-sm outline-none transition focus:border-cyan-400 focus:bg-white focus:ring-2 focus:ring-cyan-100"
                                 placeholder="cliente@correo.com">
 
                         </div>
@@ -790,7 +790,7 @@
                             <select
                                 id="estado"
                                 name="estado"
-                                class="w-full appearance-none rounded-xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-sm outline-none transition focus:border-cyan-400 focus:bg-white focus:ring-2 focus:ring-cyan-100">
+                                class="w-full text-slate-600 appearance-none rounded-xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-sm outline-none transition focus:border-cyan-400 focus:bg-white focus:ring-2 focus:ring-cyan-100">
                                 <option value="1">
                                     Activo
                                 </option>
@@ -822,7 +822,7 @@
                                 name="direccion"
                                 rows="3"
                                 maxlength="255"
-                                class="w-full resize-none rounded-xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-sm outline-none transition focus:border-cyan-400 focus:bg-white focus:ring-2 focus:ring-cyan-100"
+                                class="w-full text-slate-600 resize-none rounded-xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-sm outline-none transition focus:border-cyan-400 focus:bg-white focus:ring-2 focus:ring-cyan-100"
                                 placeholder="Dirección del cliente"></textarea>
 
                         </div>
